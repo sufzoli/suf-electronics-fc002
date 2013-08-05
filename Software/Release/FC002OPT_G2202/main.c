@@ -2,7 +2,10 @@
 #include "textconv.h"
 
 /*
- * Frequency Counter project - 002A
+ * Frequency Counter project - 002B
+ * Copyright by Zoltan Gomori
+ * License:
+ * Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
  * main.c
  */
 
