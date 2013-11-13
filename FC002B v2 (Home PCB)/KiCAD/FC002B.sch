@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "22 aug 2013"
+Date "27 oct 2013"
 Rev ""
 Comp ""
 Comment1 ""
@@ -136,8 +136,6 @@ Wire Wire Line
 	4650 1750 3900 1750
 Wire Wire Line
 	3900 1750 3900 2650
-Wire Wire Line
-	3425 6400 3425 6500
 Connection ~ 3750 4025
 Wire Wire Line
 	4050 4025 3750 4025
@@ -898,17 +896,6 @@ F 1 "VCC" H 5050 4250 30  0000 C CNN
 F 2 "" H 5050 4150 60  0001 C CNN
 F 3 "" H 5050 4150 60  0001 C CNN
 	1    5050 4150
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR017
-U 1 1 5126874F
-P 3425 6500
-F 0 "#PWR017" H 3425 6500 30  0001 C CNN
-F 1 "GND" H 3425 6430 30  0001 C CNN
-F 2 "" H 3425 6500 60  0001 C CNN
-F 3 "" H 3425 6500 60  0001 C CNN
-	1    3425 6500
 	1    0    0    -1  
 $EndComp
 $Comp

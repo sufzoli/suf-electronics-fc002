@@ -1,4 +1,4 @@
-PCBNEW-BOARD Version 2 date 05/08/2013 05:48:08
+PCBNEW-BOARD Version 2 date 12/09/2013 23:14:35
 
 # Created by Pcbnew(2013-07-07 BZR 4022)-stable
 
@@ -10,7 +10,7 @@ EnabledLayers 1FFF8001
 Links 150
 NoConn 0
 Di 92.726934 106.1466 236.838066 160.210501
-Ndraw 45
+Ndraw 44
 Ntrack 538
 Nzone 0
 BoardThickness 1.6002
@@ -21,7 +21,7 @@ $EndGENERAL
 $SHEETDESCR
 Sheet A4 11693 8268
 Title ""
-Date "5 aug 2013"
+Date "12 sep 2013"
 Rev ""
 Comp ""
 Comment1 ""
@@ -67,7 +67,7 @@ PadDrill 0.8001
 Pad2MaskClearance 0.254
 SolderMaskMinWidth 0
 AuxiliaryAxisOrg 98.425 160.02
-VisibleElements FFFFFFBF
+VisibleElements 7FFFFFFF
 PcbPlotParams (pcbplotparams (layerselection 3178497) (usegerberextensions true) (excludeedgelayer true) (linewidth 0.150000) (plotframeref false) (viasonmask false) (mode 1) (useauxorigin false) (hpglpennumber 1) (hpglpenspeed 20) (hpglpendiameter 15) (hpglpenoverlay 0) (psnegative false) (psa4output false) (plotreference true) (plotvalue true) (plotothertext true) (plotinvisibletext false) (padsonsilk false) (subtractmaskfromsilk false) (outputformat 1) (mirror false) (drillshape 1) (scaleselection 1) (outputdirectory ""))
 $EndSETUP
 
@@ -3269,10 +3269,6 @@ De 21 0 900 0 0
 $EndDRAWSEGMENT
 $DRAWSEGMENT
 Po 0 144.78 121.92 144.78 125.73 0.381
-De 21 0 900 0 0
-$EndDRAWSEGMENT
-$DRAWSEGMENT
-Po 0 144.78 119.38 144.78 121.92 0.381
 De 21 0 900 0 0
 $EndDRAWSEGMENT
 $DRAWSEGMENT
