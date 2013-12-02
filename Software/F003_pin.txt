@@ -1,0 +1,17 @@
+P1.0 - IN (Timer Clock)
+P1.1 - NC
+P1.2 - 256Hz (Timer Capture 1)
+P1.3 - DIGIT CLK
+P1.4 - IN (Timer Capture 2)
+P1.5 - DIGIT RST
+P1.6 - G
+P1.7 - DP
+
+P2.0 - A
+P2.1 - B
+P2.2 - C
+P2.3 - D
+P2.4 - E
+P2.5 - F 
+P2.6 - 4.194304 MHz (SMCLK)
+P2.7 - NC
