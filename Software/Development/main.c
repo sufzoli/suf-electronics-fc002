@@ -17,7 +17,7 @@ unsigned char bcd[8];
 unsigned char pps1;
 unsigned int tb_count; // timebase count
 
-unsigned char count_mode = 0; // Mode of the counter 0 - Frequency 1 - Interval
+unsigned char count_mode = 1; // Mode of the counter 0 - Frequency 1 - Interval
 unsigned int gate_division = 256;
 
 char pps1_count; // last DP blink - On interval
@@ -94,16 +94,16 @@ int main(void) {
 	// CM1 - Capture on rising edge
 	// CCIE - External input
 	// TA0CCTL0 = CAP + CCIE;
-	TA0CCTL1 = CM1 + CAP + CCIE;
+	TA0CCTL1 = CAP + CCIE;
 
 	// Initialize compare block 1
 	// CAP = 1 - Use capture mode
 	// SCS = 0 - Asynchronous capture
 	// CM1 - Capture on rising edge
 	// CCIE - External input
-	// TA0CCTL2 = CAP + CCIE;
+	TA0CCTL2 = CAP + CCIE;
 
-	// set_countmode();
+	set_countmode();
 
     _EINT();	// Enable interrupts
 
@@ -152,51 +152,7 @@ int main(void) {
     	}
     }
 }
-/*
-// Timer capture interrupt
-#pragma vector=TIMER0_A0_VECTOR
-__interrupt void TACCR0_ISR(void)
-{
-	// The execution of the overflow interrupt blocked from here
-	unsigned long freq;
-	unsigned long ccrvalue;
-	if(tb_count >= (gate_division - 1))
-	{
 
-		// store the actual value of the counter
-		freq = counter;
-		// clear master counter
-		counter = 0;
-		// Clear interrupt
-		// The execution of the overflow interrupt allowed from here
-		TA0CCTL0 &= ~CCIFG;
-		TA0CCTL1 &= ~CCIFG;
-
-		// get the capture data
-		ccrvalue = count_mode ? TA0CCR1: TA0CCR0;
-
-		// process data
-		//
-		//          || <--------------------------------------------------- freq ------------------------------------------------> ||
-		//  prevccr || 0x10000 - prevccr | 0x10000 overflow | 0x10000 overflow | ..... | 0x10000 overflow | 0x10000 overflow | ccr ||
-		freq += ccrvalue - prevccr;
-		// store current ccr for the next count
-		prevccr = ccrvalue;
-		// covert the binary frequency value to BCD for display
-		LongToBCD(8,bcd,freq,0);
-		pps1 = 0x80; // switch on the last DP
-		pps1_count = 100; // Keep Last DP on for 100 display cicles
-		tb_count=0;
-	}
-	else
-	{
-		// The execution of the overflow interrupt allowed from here
-		TA0CCTL0 &= ~CCIFG;
-		TA0CCTL1 &= ~CCIFG;
-		tb_count++;
-	}
-}
-*/
 // Timer_A3 Interrupt Vector (TA0IV) handler
 #pragma vector=TIMER0_A1_VECTOR
 __interrupt void TA0IV_ISR(void)
@@ -224,7 +180,7 @@ __interrupt void TA0IV_ISR(void)
 			counter = 0;
 			// Clear interrupt
 			// The execution of the overflow interrupt allowed from here
-			TA0CCTL1 &= ~CCIFG;
+			// TA0CCTL1 &= ~CCIFG;
 			// TA0IV &= ~TA0IV_TACCR1;
 			// TA0CCTL2 &= ~CCIFG;
 
@@ -247,7 +203,7 @@ __interrupt void TA0IV_ISR(void)
 		else
 		{
 			// The execution of the overflow interrupt allowed from here
-			TA0CCTL1 &= ~CCIFG;
+			// TA0CCTL1 &= ~CCIFG;
 			// TA0IV &= ~TA0IV_TACCR1;
 			// TA0CCTL2 &= ~CCIFG;
 			tb_count++;
