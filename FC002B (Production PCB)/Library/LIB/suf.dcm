@@ -1,3 +1,8 @@
-EESchema-DOCLIB  Version 2.0  Date: 22/11/2013 22:37:32
+EESchema-DOCLIB  Version 2.0  Date: 09/01/2014 05:47:33
+#
+$CMP 4017
+D Jonhson Counter ( 10 outputs )
+K CNT CNT10
+$ENDCMP
 #
 #End Doc Library

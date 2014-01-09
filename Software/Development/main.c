@@ -35,6 +35,27 @@ unsigned int gate_division = 256;
 char pps1_count; // last DP blink - On interval
 
 
+/*
+ * Port pin usage
+ * 	P1.0 - Input
+ * 	P1.1 - HF Clock
+ *  P1.2 - LF Clock
+ *  P1.3 - MPX CLK
+ *  P1.4 - Input
+ *  P1.5 - MPX RST
+ *  P1.6 - Segment G
+ *  P1.7 - Segment DP
+ *  P2.0 - Segment A
+ *  P2.1 - Segment B
+ *  P2.2 - Segment C
+ *  P2.3 - Segment D
+ *  P2.4 - Segment E
+ *  P2.5 - Segment F
+ *  P2.6 - HF Clock (4.194304 MHz)
+ *  P2.7 - NC
+ */
+
+
 void set_countmode()
 {
 	_DINT();
@@ -138,7 +159,7 @@ int main(void) {
     // infinite loop
     while (1)
     {
-    	for(i=0;i<10;i++)
+        for(i=0;i<9;i++)
     	{
     		// switch of the digit
     		P1OUT &= 0x3F;
@@ -156,7 +177,7 @@ int main(void) {
 					P2OUT |= segments[bcd[i] & 0x0F] & 0x3F;
 				}
     		}
-    		if(i==9)	// Because of a hardware bug
+        	if(i==8)
     		{
     			// Reconfigure ports
     			// Set Input
@@ -165,12 +186,14 @@ int main(void) {
     			// Enable Resistors
     			P1REN = 0xC0;
     			P2REN = 0x3F;
-    			// Pull-Up
-    			P1OUT |= 0xC0;
-    			P2OUT |= 0x3F;
+
+    			// Pull-Down
+    			P1OUT &= ~0xC0;
+    			P2OUT &= ~0x3F;
+
     			// Read
     			__delay_cycles(100);
-    			switch_read = ~((P1IN | 0x3F) & (P2IN | 0xC0));
+    			switch_read = (P1IN & 0xC0) | (P2IN & 0x3F);
     			if(switches != switch_read)
     			{
     				// Something changed
