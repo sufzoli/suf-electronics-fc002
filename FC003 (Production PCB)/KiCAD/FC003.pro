@@ -1,5 +1,5 @@
-update=12/01/2014 06:04:21
-last_client=pcbnew
+update=17/01/2014 07:10:45
+last_client=kicad
 [eeschema]
 version=1
 LibDir=../Library/LIB
@@ -67,3 +67,6 @@ LibName3=DIP
 LibName4=Header
 LibName5=SOB
 LibName6=dip_sockets
+LibName7=ohw-logo
+[general]
+version=1
