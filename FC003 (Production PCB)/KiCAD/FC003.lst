@@ -1,0 +1,136 @@
+eeschema (2013-07-07 BZR 4022)-stable  >> Creation date: 31/01/2014 11:49:58
+#Cmp ( order = Reference )
+| C1         C           
+| C2         C           
+| C3         C           
+| C4         82pF        
+| C5         1nF         
+| C6         100nF       
+| C7         100nF       
+| C8         100uF/16V   
+| C9         22uF/16V    
+| D1         ~           
+| D2         ~           
+| D3         ~           
+| D4         ~           
+| D5         ~           
+| D6         ~           
+| D7         ~           
+| D8         ~           
+| D9         1N4148      
+| D10        1N4148      
+| J1         SBW         
+| J2         IN          
+| J3         PWR         
+| J4         ACCESSORY   
+| J5         EXT CLK     
+| J6         HF SRC      
+| J7         ~           
+| J8         ~           
+| J9         ~           
+| J10        ~           
+| J11        ~           
+| J12        ~           
+| J13        ~           
+| J14        ~           
+| J15        PSU         
+| J16        EN_PR       
+| J17        IN_DIG      
+| R1         4M7         
+| R2         2K2         
+| R3         47K         
+| R4         1M          
+| R5         10K         
+| R12        100         
+| R13        100         
+| R14        100         
+| R15        100         
+| R16        100         
+| R17        100         
+| R18        100         
+| R19        100         
+| SW1        DIPSW-8     
+| U1         MSP430G2202 
+| U2         4017        
+| U3         74HC4060    
+| U4         ULN2803A    
+| U5         SC52-11     
+| U6         SC52-11     
+| U7         SC52-11     
+| U8         SC52-11     
+| U9         SC52-11     
+| U10        SC52-11     
+| U11        SC52-11     
+| U12        SC52-11     
+| U13        TS2950CT    
+| X1         4.194304MHz 
+#End Cmp
+
+#Cmp ( order = Value )
+| 82pF         C4        
+| 1nF          C5        
+| 100nF        C6        
+| 100nF        C7        
+| 22uF/16V     C9        
+| 100uF/16V    C8        
+| C            C1        
+| C            C2        
+| C            C3        
+| ~            D1        
+| ~            D2        
+| ~            D3        
+| ~            D4        
+| ~            D5        
+| ~            D6        
+| ~            D7        
+| ~            D8        
+| 1N4148       D9        
+| 1N4148       D10       
+| IN           J2        
+| PWR          J3        
+| HF SRC       J6        
+| ~            J7        
+| ~            J8        
+| ~            J9        
+| ~            J10       
+| ~            J11       
+| ~            J12       
+| ~            J13       
+| ~            J14       
+| EN_PR        J16       
+| IN_DIG       J17       
+| EXT CLK      J5        
+| ACCESSORY    J4        
+| SBW          J1        
+| PSU          J15       
+| 100          R12       
+| 100          R13       
+| 100          R14       
+| 100          R15       
+| 100          R16       
+| 100          R17       
+| 100          R18       
+| 100          R19       
+| 2K2          R2        
+| 10K          R5        
+| 47K          R3        
+| 1M           R4        
+| 4M7          R1        
+| DIPSW-8      SW1       
+| 4017         U2        
+| 74HC4060     U3        
+| ULN2803A     U4        
+| MSP430G2202  U1        
+| SC52-11      U5        
+| SC52-11      U6        
+| SC52-11      U7        
+| SC52-11      U8        
+| SC52-11      U9        
+| SC52-11      U10       
+| SC52-11      U11       
+| SC52-11      U12       
+| TS2950CT     U13       
+| 4.194304MHz  X1        
+#End Cmp
+
+#End List
