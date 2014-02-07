@@ -10,7 +10,9 @@
 #define CTR_RST 0x20
 
 #define FLAG_COUNT_MODE 0x10
-#define FLAG_DISP_MODE 0x08
+// #define FLAG_DISP_MODE 0x08
+#define FLAG_DISP_MODE0 0x08
+#define FLAG_DISP_MODE1 0x04
 
 const char segments[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
 const unsigned long multiplication_limits[] = { 429496729, 42949672, 4294967, 429496, 42949, 4294, 429, 42, 4 };
@@ -19,6 +21,7 @@ const unsigned long powerten[] = { 0, 10, 100, 1000, 10000, 100000, 1000000, 100
 unsigned long prevccr; // Previous value of the capture register
 unsigned long counter;
 unsigned long count_result;
+unsigned long count_high_part;
 unsigned char result_ready;
 unsigned char bcd[8];
 unsigned char pps1;
@@ -67,7 +70,8 @@ void set_countmode()
 	if(count_mode == 0)
 	{
 		// In frequency counting mode the Capture/Compare Block 2 not used (no interrupt)
-		TA0CCTL2 &= ~CM1;
+//		TA0CCTL2 &= ~CM1;
+		TA0CCTL2 &= ~(CM1 + CM0);	// capture on both edges
 		// The counter input is set to external input
 		// TACTL register
 		// BIT 9-8 - 00 - Source: TACLK
@@ -76,7 +80,8 @@ void set_countmode()
 	else
 	{
 		// In interval counting mode the Capture/Compare Block 2 will gate with external input signal
-		TA0CCTL2 |= CM1;
+//		TA0CCTL2 |= CM1;
+		TA0CCTL2 |= CM1 + CM0;	// Capture on both edges
 		// The counter input is set to external input
 		// TACTL register
 		// BIT 9-8 - 01 - Source: ACLK
@@ -141,9 +146,10 @@ int main(void) {
 	// CCIE - External input
 	// TA0CCTL0 = CAP + CCIE;
 //	TA0CCTL1 = CAP + CCIE;
-	TA0CCTL1 = CM1 + CAP + CCIE;	// The CM1 is added here because the 1 Hz tick always needed. It used for the value calculation
+//	TA0CCTL1 = CM1 + CAP + CCIE;	// The CM1 is added here because the 1 Hz tick always needed. It used for the value calculation
+	TA0CCTL1 = CM0 + CAP + CCIE;	// The CM1 is added here because the 1 Hz tick always needed. It used for the value calculation
 
-	// Initialize compare block 1
+	// Initialize compare block 2
 	// CAP = 1 - Use capture mode
 	// SCS = 0 - Asynchronous capture
 	// CCIE - External input
@@ -199,7 +205,8 @@ int main(void) {
     				// Something changed
     				switches = switch_read;
     				count_mode = (switches & FLAG_COUNT_MODE) > 0 ? 1:0;
-    				disp_mode = (switches & FLAG_DISP_MODE) > 0 ? 1:0;
+//    				disp_mode = (switches & FLAG_DISP_MODE) > 0 ? 1:0;
+    				disp_mode = ((switches & FLAG_DISP_MODE0) > 0 ? 1:0) | ((switches & FLAG_DISP_MODE1) > 0 ? 2:0);
     				set_countmode();
     			}
 
@@ -261,21 +268,36 @@ __interrupt void TA0IV_ISR(void)
 	// Capture/Compare Block 2 handling. Only active in interval mode
 	if(taiv == TA0IV_TACCR2)
 	{
-		// store the actual value of the counter
-		count_result = counter;
-		// clear master counter
-		counter = 0;
-		// get the capture data
-		ccrvalue = TA0CCR2;
-		// process data
-		//
-		//          || <--------------------------------------------------- count_result ------------------------------------------------> ||
-		//  prevccr || 0x10000 - prevccr | 0x10000 overflow | 0x10000 overflow | ..... | 0x10000 overflow | 0x10000 overflow | ccr ||
-		count_result += ccrvalue - prevccr;
-		// store current ccr for the next count
-		prevccr = ccrvalue;
-		// indicate that we have a valid count result
-		result_ready = 1;
+		if(TA0CCTL2 & CCI)
+		{
+			// store the actual value of the counter
+			count_result = counter;
+			// clear master counter
+			counter = 0;
+			// get the capture data
+			ccrvalue = TA0CCR2;
+			// process data
+			//
+			//          || <--------------------------------------------------- count_result ------------------------------------------------> ||
+			//  prevccr || 0x10000 - prevccr | 0x10000 overflow | 0x10000 overflow | ..... | 0x10000 overflow | 0x10000 overflow | ccr ||
+			count_result += ccrvalue - prevccr;
+			// store current ccr for the next count
+			prevccr = ccrvalue;
+			// indicate that we have a valid count result
+			result_ready = 1;
+		}
+		else
+		{
+			// store the actual value of the counter
+			count_high_part = counter;
+			// get the capture data
+			ccrvalue = TA0CCR2;
+			// process data
+			//
+			//          || <--------------------------------------------------- count_result ------------------------------------------------> ||
+			//  prevccr || 0x10000 - prevccr | 0x10000 overflow | 0x10000 overflow | ..... | 0x10000 overflow | 0x10000 overflow | ccr ||
+			count_high_part += ccrvalue - prevccr;
+		}
 	}
 
 
@@ -323,6 +345,16 @@ __interrupt void TA0IV_ISR(void)
 							count_result *= powerten[i];
 							count_result /= 4194304;
 							break;
+							// if 2 just count mode
+						case 3: // fill factor
+							for( i = 0; i < 9 && multiplication_limits[i] > count_high_part; i++);
+							count_high_part *= powerten[i];
+							count_result = count_high_part / count_result;
+							// count_result = i;
+							if(i > 2)
+							{
+								dp = 1 << (i-2);
+							}
 					}
 					// handle the decimal point!!!
 				}
