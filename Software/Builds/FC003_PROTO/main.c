@@ -9,18 +9,10 @@
 #define CTR_CLK	0x08
 #define CTR_RST 0x20
 
-// Prototype
-/*
 #define FLAG_COUNT_MODE 0x10
+// #define FLAG_DISP_MODE 0x08
 #define FLAG_DISP_MODE0 0x08
 #define FLAG_DISP_MODE1 0x04
-*/
-
-// Production
-#define FLAG_COUNT_MODE 0x80
-#define FLAG_DISP_MODE0 0x40
-#define FLAG_DISP_MODE1 0x20
-
 
 const char segments[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
 const unsigned long multiplication_limits[] = { 429496729, 42949672, 4294967, 429496, 42949, 4294, 429, 42, 4 };
