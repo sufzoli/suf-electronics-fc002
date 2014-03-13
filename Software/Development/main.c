@@ -22,7 +22,9 @@
 #define FLAG_DISP_MODE1 0x20
 
 
-const char segments[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
+// const char segments[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
+const unsigned char boot_info[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x6D,0x3E,0x71,0x00,0x40,0x00,0x71,0x39,0x3F,0x3F,0x4F,0x00,0x40,0x00,0x86,0x3F,0x3F,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
 const unsigned long multiplication_limits[] = { 429496729, 42949672, 4294967, 429496, 42949, 4294, 429, 42, 4 };
 const unsigned long powerten[] = { 0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000 };
 
@@ -44,6 +46,9 @@ unsigned char disp_mode = 0; // display mode of the Interval counter 0 - Frequen
 unsigned int gate_division = 256;
 
 char pps1_count; // last DP blink - On interval
+
+// unsigned long boot_count = 53248; // 26 * 2048
+unsigned long boot_count = 26624; // 26 * 1024
 
 
 /*
@@ -185,10 +190,23 @@ int main(void) {
 
     		if(i<8)
     		{
-				if((bcd[i] & 0x10) == 0 || i == 0)
+    			if(boot_count == 0)
+    			{
+    				/*
+					if((bcd[i] & 0x10) == 0 || i == 0)
+					{
+						P1OUT |= (segments[bcd[i] & 0x0F] | (i ? 0 : pps1) | (dp & (1 << i) ? 0x80 : 0)) & 0xC0;
+						P2OUT |= segments[bcd[i] & 0x0F] & 0x3F;
+					}
+					*/
+					P1OUT |= (bcd[i] | (i ? 0 : pps1) | (dp & (1 << i) ? 0x80 : 0)) & 0xC0;
+					P2OUT |= bcd[i] & 0x3F;
+    			}
+				else
 				{
-					P1OUT |= (segments[bcd[i] & 0x0F] | (i ? 0 : pps1) | (dp & (1 << i) ? 0x80 : 0)) & 0xC0;
-					P2OUT |= segments[bcd[i] & 0x0F] & 0x3F;
+					boot_count--;
+					P1OUT |= boot_info[32 - (boot_count >> 10) - i] & 0xC0;
+					P2OUT |= boot_info[32 - (boot_count >> 10) - i] & 0x3F;
 				}
     		}
         	if(i==8)
@@ -261,6 +279,7 @@ __interrupt void TA0IV_ISR(void)
 	// unsigned long count_result;
 	unsigned long ccrvalue;
 	unsigned int taiv;
+	unsigned char oor = 0; // indicates if signal is out of range
 
 	int i;
 
@@ -345,8 +364,15 @@ __interrupt void TA0IV_ISR(void)
 					switch(disp_mode)
 					{
 						case 0: // frequency
-							count_result = 4194304000 / count_result;
-							dp = 8;
+							if(count_result > 0)
+							{
+								count_result = 4194304000 / count_result;
+								dp = 8;
+							}
+							else
+							{
+								oor = 1;
+							}
 							break;
 						case 1: // time
 							for( i = 0; i < 9 && multiplication_limits[i] > count_result; i++);
@@ -355,19 +381,34 @@ __interrupt void TA0IV_ISR(void)
 							break;
 							// if 2 just count mode
 						case 3: // fill factor
-							for( i = 0; i < 9 && multiplication_limits[i] > count_high_part; i++);
-							count_high_part *= powerten[i];
-							count_result = count_high_part / count_result;
-							// count_result = i;
-							if(i > 2)
+							if(count_result > 0)
 							{
-								dp = 1 << (i-2);
+								for( i = 0; i < 9 && multiplication_limits[i] > count_high_part; i++);
+								count_high_part *= powerten[i];
+								count_result = count_high_part / count_result;
+								// count_result = i;
+								if(i > 2)
+								{
+									dp = 1 << (i-2);
+								}
+							}
+							else
+							{
+								oor = 1;
 							}
 					}
 					// handle the decimal point!!!
 				}
 				// covert the binary frequency value to BCD for display
-				LongToBCD(8,bcd,count_result,0);
+//				LongToBCD(8,bcd,count_result,0);
+				if(oor == 0)
+				{
+					LongToText(8,bcd,count_result,0);
+				}
+				else
+				{
+					bcd = {0xA0,0xAC,0xAC,0,0,0,0,0};
+				}
 				pps1 = 0x80; // switch on the last DP
 				pps1_count = 100; // Keep Last DP on for 100 display cycles
 				result_ready = 0;
