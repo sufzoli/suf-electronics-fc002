@@ -287,14 +287,19 @@ __interrupt void TA0IV_ISR(void)
 
 	// Overflow handling
 	// after the counter overflow increment the counter with 65536
-	if(taiv == TA0IV_TAIFG)
+	if(taiv == TA0IV_TAIFG && counter < 0xFFFEFFFF) // do not allow to overflow
 	{
 		counter += 0x10000;
+	}
+	if(counter > 0x2800000)
+	{
+		oor = 1;
 	}
 
 	// Capture/Compare Block 2 handling. Only active in interval mode
 	if(taiv == TA0IV_TACCR2)
 	{
+		oor = 0;
 		if(TA0CCTL2 & CCI)
 		{
 			// store the actual value of the counter
@@ -330,6 +335,7 @@ __interrupt void TA0IV_ISR(void)
 
 	if(taiv == TA0IV_TACCR1)
 	{
+		oor = 0;
 		if(tb_count >= (gate_division - 1))
 		{
 			if(count_mode == 0)
@@ -405,10 +411,6 @@ __interrupt void TA0IV_ISR(void)
 				{
 					LongToText(8,bcd,count_result,0);
 				}
-				else
-				{
-					bcd = {0xA0,0xAC,0xAC,0,0,0,0,0};
-				}
 				pps1 = 0x80; // switch on the last DP
 				pps1_count = 100; // Keep Last DP on for 100 display cycles
 				result_ready = 0;
@@ -423,6 +425,17 @@ __interrupt void TA0IV_ISR(void)
 			// TA0CCTL2 &= ~CCIFG;
 			tb_count++;
 		}
+	}
+	if(oor > 0)
+	{
+		bcd[0] = 0;
+		bcd[1] = 0;
+		bcd[2] = 0;
+		bcd[3] = 0;
+		bcd[4] = 0;
+		bcd[5] = 0x50;
+		bcd[6] = 0x5C;
+		bcd[7] = 0x5C;
 	}
 }
 
