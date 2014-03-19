@@ -384,6 +384,11 @@ __interrupt void TA0IV_ISR(void)
 							for( i = 0; i < 9 && multiplication_limits[i] > count_result; i++);
 							count_result *= powerten[i];
 							count_result /= 4194304;
+							// count_result = i;
+							if(i<6)
+							{
+								count_result *= powerten[6-i];
+							}
 							break;
 							// if 2 just count mode
 						case 3: // fill factor
