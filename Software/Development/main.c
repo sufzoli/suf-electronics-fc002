@@ -35,7 +35,7 @@ unsigned long count_high_part;
 unsigned char result_ready;
 unsigned char bcd[8];
 unsigned char pps1;
-unsigned char dp;
+// unsigned char dp;
 unsigned int tb_count; // timebase count
 
 unsigned char switches;
@@ -199,7 +199,8 @@ int main(void) {
 						P2OUT |= segments[bcd[i] & 0x0F] & 0x3F;
 					}
 					*/
-					P1OUT |= (bcd[i] | (i ? 0 : pps1) | (dp & (1 << i) ? 0x80 : 0)) & 0xC0;
+//					P1OUT |= (bcd[i] | (i ? 0 : pps1) | (dp & (1 << i) ? 0x80 : 0)) & 0xC0;
+					P1OUT |= (bcd[i] | (i ? 0 : pps1)) & 0xC0;
 					P2OUT |= bcd[i] & 0x3F;
     			}
 				else
@@ -280,6 +281,8 @@ __interrupt void TA0IV_ISR(void)
 	unsigned long ccrvalue;
 	unsigned int taiv;
 	unsigned char oor = 0; // indicates if signal is out of range
+
+	unsigned char dpoint = 0;
 
 	int i;
 
@@ -364,7 +367,7 @@ __interrupt void TA0IV_ISR(void)
 			}
 			if(result_ready)
 			{
-				dp = 0; // switch of the decimal points
+				// dp = 0; // switch of the decimal points
 				if(count_mode == 1)
 				{
 					switch(disp_mode)
@@ -373,7 +376,8 @@ __interrupt void TA0IV_ISR(void)
 							if(count_result > 0)
 							{
 								count_result = 4194304000 / count_result;
-								dp = 8;
+								// dp = 8;
+								dpoint = 4;
 							}
 							else
 							{
@@ -385,12 +389,16 @@ __interrupt void TA0IV_ISR(void)
 							count_result *= powerten[i];
 							count_result /= 4194304;
 							// count_result = i;
-							if(i<6)
+							if(i < 6)
 							{
 								count_result *= powerten[6-i];
 							}
+							if(i > 6)
+							{
+								dpoint = i - 5;
+							}
 							break;
-							// if 2 just count mode
+						// if 2 just count mode
 						case 3: // fill factor
 							if(count_result > 0)
 							{
@@ -400,7 +408,8 @@ __interrupt void TA0IV_ISR(void)
 								// count_result = i;
 								if(i > 2)
 								{
-									dp = 1 << (i-2);
+//									dp = 1 << (i-2);
+									dpoint = i-1;
 								}
 							}
 							else
@@ -414,7 +423,8 @@ __interrupt void TA0IV_ISR(void)
 //				LongToBCD(8,bcd,count_result,0);
 				if(oor == 0)
 				{
-					LongToText(8,bcd,count_result,0);
+					LongToText(8,bcd,count_result,0, dpoint);
+//					LongToText(8,bcd,count_result,0);
 				}
 				pps1 = 0x80; // switch on the last DP
 				pps1_count = 100; // Keep Last DP on for 100 display cycles
