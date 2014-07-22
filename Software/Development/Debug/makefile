@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccsv5/tools/compiler/msp430_4.2.1
+CG_TOOL_ROOT := c:/ti/ccsv6/tools/compiler/msp430_4.3.1
 
 ORDERED_OBJS += \
 $(GEN_CMDS__FLAG) \
@@ -108,6 +108,12 @@ endif
 -include ../makefile.defs
 
 # Add inputs and outputs from these tool invocations to the build variables 
+EXE_OUTPUTS += \
+FC003.out \
+
+EXE_OUTPUTS__QUOTED += \
+"FC003.out" \
+
 
 # All Target
 all: FC003.out
@@ -116,13 +122,13 @@ all: FC003.out
 FC003.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MSP430 Linker'
-	"C:/ti/ccsv5/tools/compiler/msp430_4.2.1/bin/cl430" -vmsp --abi=eabi -g --advice:power=all --define=__MSP430G2312__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal -z --stack_size=80 -m"FC003.map" --heap_size=80 -i"C:/ti/ccsv5/ccs_base/msp430/include" -i"C:/ti/ccsv5/tools/compiler/msp430_4.2.1/lib" -i"C:/ti/ccsv5/tools/compiler/msp430_4.2.1/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="FC003_linkInfo.xml" --rom_model -o "FC003.out" $(ORDERED_OBJS)
+	"c:/ti/ccsv6/tools/compiler/msp430_4.3.1/bin/cl430" -vmsp --abi=eabi -g --advice:power=all --define=__MSP430G2312__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal -z --stack_size=80 -m"FC003.map" --heap_size=80 -i"c:/ti/ccsv6/ccs_base/msp430/include" -i"c:/ti/ccsv6/tools/compiler/msp430_4.3.1/lib" -i"c:/ti/ccsv6/tools/compiler/msp430_4.3.1/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="FC003_linkInfo.xml" --rom_model -o "FC003.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(MSP430_EXECUTABLE_OUTPUTS__QUOTED) "FC003.out"
+	-$(RM) $(EXE_OUTPUTS__QUOTED)
 	-$(RM) "main.pp" "textconv.pp" 
 	-$(RM) "main.obj" "textconv.obj" 
 	-@echo 'Finished clean'
