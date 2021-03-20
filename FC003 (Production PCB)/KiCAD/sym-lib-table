@@ -1,0 +1,7 @@
+(sym_lib_table
+  (lib (name FC003-rescue)(type Legacy)(uri ${KIPRJMOD}/FC003-rescue.lib)(options "")(descr ""))
+  (lib (name suf)(type Legacy)(uri "C:/DATA/SourceControl/SUF-GitHub/Electronics/suf-electronics-fc002/FC003 (Production PCB)/Library/LIB/suf.lib")(options "")(descr ""))
+  (lib (name conn1)(type Legacy)(uri "C:/DATA/SourceControl/SUF-GitHub/Electronics/suf-electronics-fc002/FC003 (Production PCB)/Library/LIB/conn.lib")(options "")(descr ""))
+  (lib (name device)(type Legacy)(uri "C:/DATA/SourceControl/SUF-GitHub/Electronics/suf-electronics-fc002/FC003 (Production PCB)/Library/LIB/device.lib")(options "")(descr ""))
+  (lib (name interface)(type Legacy)(uri ${KICAD_SYMBOL_DIR}/interface.lib)(options "")(descr ""))
+)

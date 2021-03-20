@@ -1,1 +1,1 @@
-"./textconv.obj" "./main.obj" "../lnk_msp430g2312.cmd" -l"libc.a" 
+"./main.obj" "./textconv.obj" "../lnk_msp430g2312.cmd" -llibc.a 

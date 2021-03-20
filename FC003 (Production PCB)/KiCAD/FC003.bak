@@ -37,7 +37,7 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title "FC002B - Frequency Counter"
-Date "14 jan 2014"
+Date "31 jan 2014"
 Rev "1"
 Comp ""
 Comment1 ""
@@ -751,7 +751,7 @@ L R R5
 U 1 1 529D9B2F
 P 1625 4425
 F 0 "R5" H 1625 4350 40  0000 C CNN
-F 1 "10K" H 1625 4500 40  0000 C CNN
+F 1 "1K" H 1625 4500 40  0000 C CNN
 F 2 "R2" H 1625 4425 60  0001 C CNN
 F 3 "~" H 1625 4425 60  0000 C CNN
 	1    1625 4425
